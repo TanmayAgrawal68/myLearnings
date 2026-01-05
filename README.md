@@ -4,4 +4,14 @@
 
 ### Total Folders - 1
 
-### Notes - none
+### Notes -
+
+- create virtual env using the command :
+
+> python -m venv venv
+
+- Activate the environment by :
+
+> linuix/macOS : source venv/bin/activate
+> windows : venv\Scripts\activate.bat
+> windows-git-bash : source myenv/Scripts/activate
