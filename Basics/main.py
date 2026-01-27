@@ -8,6 +8,7 @@ from langchain.agents.structured_output import ToolStrategy
 from src.tools.weatherTool import get_weather_for_location, get_user_location, Context
 from src.response_formatter.weather_res_format import WeatherResponseFormat
 from src.prompts.weather_system_prompt import SYSTEM_PROMPT
+import gradio as gr
 
 
 load_dotenv()
@@ -28,25 +29,37 @@ agent = agentSpawner.get_agent(
 )
 config = {"configurable": {"thread_id": "1"}}
 
-
-def main():
-    print("welcome to main file")
+def agentCall(message: str, history: list):
     response = agent.invoke(
         {
             "messages": [
                 {
                     "role": "user",
-                    "content": "what is the weather outside? also tell me if you tell which is my location ?",
+                    "content": message,
                 }
             ]
         },
         config=config,
         context=Context(user_id="2"),
-    )
+    )    
     res = response["structured_response"]
-    print(res)
-    print("Punny Response:", res.punny_response)
-    print("Weather Conditions:", res.weather_conditions)
+    return res.punny_response
+def main():
+    print("welcome to main file")
+
+    demo = gr.ChatInterface(
+    fn=agentCall,
+    title="Weather Agent with Gemini Pro",
+    description="Ask about the weather in different locations!",
+    examples=[
+            "What's the weather in Bangalore?",
+            "Will it rain tomorrow?",
+            "What about the place I asked earlier?"
+        ]
+    )
+
+    demo.launch()
+
 
 
 if __name__ == "__main__":
